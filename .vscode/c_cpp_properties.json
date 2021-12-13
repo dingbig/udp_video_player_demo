@@ -12,7 +12,12 @@
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++98",
-            "intelliSenseMode": "macos-clang-x64"
+            "intelliSenseMode": "macos-clang-x64",
+            "browse": {
+                "path": [
+                    "/opt/local/include"
+                ]
+            }
         }
     ],
     "version": 4
