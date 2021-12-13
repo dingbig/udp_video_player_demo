@@ -1,34 +1,38 @@
-
+#include <SDL2/SDL.h>
 #include <stdio.h>
-
-#include <libavformat/avformat.h>
-#include <libavutil/dict.h>
-
-int main (int argc, char **argv)
+#include <stdlib.h>
+int main()
 {
-    AVFormatContext *fmt_ctx = NULL;
-    const AVDictionaryEntry *tag = NULL;
-    int ret;
+	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+		fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
+		return EXIT_FAILURE;
+	}
 
-    if (argc != 2) {
-        printf("usage: %s <input_file>\n"
-               "example program to demonstrate the use of the libavformat metadata API.\n"
-               "\n", argv[0]);
-        return 1;
+	SDL_Window* win = SDL_CreateWindow("Hello World!", 100, 100, 620, 387, SDL_WINDOW_SHOWN);
+	if (win == NULL) {
+		fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
+		return EXIT_FAILURE;
+	}
+
+	SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (ren == NULL) {
+		fprintf(stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
+		SDL_DestroyWindow(win);
+		SDL_Quit();
+		return EXIT_FAILURE;
+	}
+
+    while(1) {
+        SDL_Event e;
+        SDL_PollEvent(&e);
+        if(e.type == SDL_QUIT) {
+            break;
+        }
     }
 
-    if ((ret = avformat_open_input(&fmt_ctx, argv[1], NULL, NULL)))
-        return ret;
+	SDL_DestroyRenderer(ren);
+	SDL_DestroyWindow(win);
+	SDL_Quit();
 
-    if ((ret = avformat_find_stream_info(fmt_ctx, NULL)) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Cannot find stream information\n");
-        return ret;
-    }
-
-    while ((tag = av_dict_get(fmt_ctx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX)))
-        printf("%s=%s\n", tag->key, tag->value);
-
-    avformat_close_input(&fmt_ctx);
-    return 0;
+	return EXIT_SUCCESS;
 }
-
