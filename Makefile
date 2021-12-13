@@ -1,12 +1,25 @@
 
 
-CFLAGS =+ -I /opt/local/include
+CFLAGS += -I /opt/local/include
 
 
 LDFLAGS += -L /opt/local/lib -lavformat
 LDFLAGS += -L /opt/local/lib -lSDL2
 
+CC = gcc
+LD = gcc
+
+OBJS += main.o
+OBJS += hello.o
+
+all: $(OBJS)
+	@echo "linking..."
+	@$(LD) -o demo $< $(LDFLAGS)
 
 
-all: 
-	gcc -o demo main.c hello.c -I $(CFLAGS) $(LDFLAGS)
+%.o: %.c
+	@echo "cc $<..."
+	@$(CC) -c $< -o $@ $(CFLAGS)
+
+clean:
+	rm -rfv *.o
