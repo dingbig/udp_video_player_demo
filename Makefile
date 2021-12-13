@@ -22,4 +22,5 @@ all: $(OBJS)
 	@$(CC) -c $< -o $@ $(CFLAGS)
 
 clean:
-	rm -rfv *.o
+	@rm -rf *.o
+	@echo "clean"
