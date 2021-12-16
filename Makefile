@@ -13,9 +13,9 @@ LD = gcc
 # CFILENAME = videoplayer
 CFILENAME = udp_video_player
 
-$(CFILENAME): $(CFILENAME).o 
-	@echo "linking $@"
-	@$(LD) $^ -o demo $(LDFLAGS)
+all: $(CFILENAME).o
+	@echo "linking..."
+	@$(LD) -o demo $< $(LDFLAGS)
 
 $(CFILENAME).o: $(CFILENAME).c 
 	@echo "cc $<..."
