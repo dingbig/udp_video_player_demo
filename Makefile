@@ -3,24 +3,24 @@
 CFLAGS += -I /opt/local/include
 
 
-LDFLAGS += -L /opt/local/lib -lavformat
+LDFLAGS += -L /opt/local/lib -lavformat -lavcodec -lavutil -lswscale
 LDFLAGS += -L /opt/local/lib -lSDL2
 
 CC = gcc
 LD = gcc
 
-OBJS += main.o
-OBJS += hello.o
+# CFILENAME = hellosdlimg
+# CFILENAME = videoplayer
+CFILENAME = udp_video_player
 
-all: $(OBJS)
-	@echo "linking..."
-	@$(LD) -o demo $< $(LDFLAGS)
+$(CFILENAME): $(CFILENAME).o 
+	@echo "linking $@"
+	@$(LD) $^ -o demo $(LDFLAGS)
 
-
-%.o: %.c
+$(CFILENAME).o: $(CFILENAME).c 
 	@echo "cc $<..."
-	@$(CC) -c $< -o $@ $(CFLAGS)
+	@$(CC) -c $^ -o $@ $(CFLAGS)
 
 clean:
-	@rm -rf *.o
-	@echo "clean"
+	@rm -rf *.o demo
+	@echo "clean finish"
