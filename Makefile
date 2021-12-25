@@ -9,15 +9,18 @@ LDFLAGS += -L /opt/local/lib -lSDL2
 CC = gcc
 LD = gcc
 
-# CFILENAME = hellosdlimg
-# CFILENAME = videoplayer
-CFILENAME = udp_video_player
+all: TCPVideoPlayer
 
-all: $(CFILENAME).o
-	@echo "linking..."
-	@$(LD) -o demo $< $(LDFLAGS)
 
-$(CFILENAME).o: $(CFILENAME).c 
+UDPVideoPlayer: udp_video_player.o
+	@echo "linking $<"
+	@$(LD) -o demo $^ $(LDFLAGS)
+
+TCPVideoPlayer: tcp_video_player.o ffmpeg_decoder_sdl.o
+	@echo "linking $<"
+	@$(LD) -o demo $^ $(LDFLAGS)
+
+%.o: %.c 
 	@echo "cc $<..."
 	@$(CC) -c $^ -o $@ $(CFLAGS)
 
