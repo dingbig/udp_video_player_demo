@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 int main()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -22,14 +23,41 @@ int main()
 		return EXIT_FAILURE;
 	}
 
-    while(1) {
-        SDL_Event e;
-        SDL_PollEvent(&e);
+	SDL_Surface* bmp = SDL_LoadBMP("grumpy-cat.bmp");
+	if (bmp == NULL) {
+		fprintf(stderr, "SDL_LoadBMP Error: %s\n", SDL_GetError());
+		SDL_DestroyRenderer(ren);
+		SDL_DestroyWindow(win);
+		SDL_Quit();
+		return EXIT_FAILURE;
+	}
+
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(ren, bmp);
+	if (tex == NULL) {
+		fprintf(stderr, "SDL_CreateTextureFromSurface Error: %s\n", SDL_GetError());
+		SDL_FreeSurface(bmp);
+		SDL_DestroyRenderer(ren);
+		SDL_DestroyWindow(win);
+		SDL_Quit();
+		return EXIT_FAILURE;
+	}
+	SDL_FreeSurface(bmp);
+
+	SDL_Event e;
+    
+
+	for (int i = 0; i < 200; i++) {
+		SDL_RenderClear(ren);
+		SDL_RenderCopy(ren, tex, NULL, NULL);
+		SDL_RenderPresent(ren);
+		SDL_Delay(100);
+		SDL_PollEvent(&e);
         if(e.type == SDL_QUIT) {
             break;
         }
-    }
+	}
 
+	SDL_DestroyTexture(tex);
 	SDL_DestroyRenderer(ren);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
